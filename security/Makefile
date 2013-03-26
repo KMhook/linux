@@ -29,6 +29,6 @@ obj-$(CONFIG_CGROUP_DEVICE)		+= device_cgroup.o
 subdir-$(CONFIG_INTEGRITY)		+= integrity
 obj-$(CONFIG_INTEGRITY)			+= integrity/built-in.o
 
-# Object credibility file lists
-subdir-$(CONFIG_CREDIBILITY)    += credibility
-obj-$(CONFIG_CREDIBILITY) 		+= credibility/built-in.o
+# Object tdm file lists
+subdir-$(CONFIG_TDM)    += tdm
+obj-$(CONFIG_TDM) 		+= tdm/built-in.o

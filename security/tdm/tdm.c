@@ -10,13 +10,13 @@
 #include <linux/module.h>
 #include <linux/xattr.h>
 
-static int __init init_cred(void)
+static int __init init_tdm(void)
 {
     return 0;
 }
 
-late_initcall(init_cred);
+late_initcall(init_tdm);
 
-MODULE_DESCRIPTION("Credibility of subject");
+MODULE_DESCRIPTION("Trust Degree Module");
 MODULE_AUTHOR("Bo Zhi");
 MODULE_LICENSE("GPL");

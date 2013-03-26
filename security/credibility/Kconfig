@@ -1,9 +1,0 @@
-
-config SECURITY_CREDIBILITY
-	bool "credibility support"
-    default n
-    help
-        If you say Y here, support for credibility of subjects will be
-        compiled into the kernel.
-        
-        If unsure, say N.

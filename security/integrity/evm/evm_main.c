@@ -37,6 +37,9 @@ char *evm_config_xattrnames[] = {
 #ifdef CONFIG_IMA_APPRAISE
 	XATTR_NAME_IMA,
 #endif
+#ifdef CONFIG_TDM
+	XATTR_NAME_TDM,
+#endif
 	XATTR_NAME_CAPS,
 	NULL
 };

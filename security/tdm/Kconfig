@@ -1,0 +1,9 @@
+
+config SECURITY_TDM
+	bool "trust degree support"
+    default n
+    help
+        If you say Y here, support for trust degrees of subjects will be
+        compiled into the kernel.
+        
+        If unsure, say N.
