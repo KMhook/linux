@@ -328,7 +328,7 @@ int security_inode_init_security(struct inode *inode, struct inode *dir,
 				 const struct qstr *qstr,
 				 const initxattrs initxattrs, void *fs_data)
 {
-	struct xattr new_xattrs[MAX_LSM_EVM_XATTR + 1];
+	struct xattr new_xattrs[MAX_LSM_EVM_XATTR + 2];
 	struct xattr *lsm_xattr, *evm_xattr, *xattr;
 	int ret;
 
