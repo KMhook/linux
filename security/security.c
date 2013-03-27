@@ -19,6 +19,7 @@
 #include <linux/integrity.h>
 #include <linux/ima.h>
 #include <linux/evm.h>
+#include <linux/tdm.h>
 #include <linux/fsnotify.h>
 #include <linux/mman.h>
 #include <linux/mount.h>
@@ -329,7 +330,7 @@ int security_inode_init_security(struct inode *inode, struct inode *dir,
 				 const initxattrs initxattrs, void *fs_data)
 {
 	struct xattr new_xattrs[MAX_LSM_EVM_XATTR + 2];
-	struct xattr *lsm_xattr, *evm_xattr, *xattr;
+	struct xattr *lsm_xattr, *evm_xattr, *tdm_xattr, *xattr;
 	int ret;
 
 	if (unlikely(IS_PRIVATE(inode)))
@@ -349,6 +350,10 @@ int security_inode_init_security(struct inode *inode, struct inode *dir,
 
 	evm_xattr = lsm_xattr + 1;
 	ret = evm_inode_init_security(inode, lsm_xattr, evm_xattr);
+	if (ret)
+		goto out;
+	tdm_xattr = evm_xattr + 1;
+	ret = tdm_inode_init_security(inode, evm_xattr);
 	if (ret)
 		goto out;
 	ret = initxattrs(inode, new_xattrs, fs_data);
