@@ -16,8 +16,11 @@ enum tdm_trust_status {
     TDM_UNKNOWN,
     TDM_UNTRUSTED,
 };
+extern int tdm_inode_init_security(struct inode *inode, 
+        struct xattr *tdm_xattr);
+
 static inline int tdm_inode_init_security(struct inode *inode, 
-                                        struct xattr *tdm_xattr)
+        struct xattr *tdm_xattr)
 {
     return 0;
 }
