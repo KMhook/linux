@@ -11,6 +11,11 @@
 
 #ifdef CONFIG_TDM
 struct tdm_xattr_data;
+enum tdm_trust_status {
+    TDM_TRUSTED = 0x01,
+    TDM_UNKNOWN,
+    TDM_UNTRUSTED,
+};
 static inline int tdm_inode_init_security(struct inode *inode, 
                                         struct xattr *tdm_xattr)
 {

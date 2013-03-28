@@ -11,8 +11,9 @@
 #include <linux/xattr.h>
 #include "tdm.h"
 
+/*  
 int tdm_initialized;
-
+*/
 char *tdm_config_policies[] = {
 #ifdef CONFIG_SECURITY_SELINUX
     XATTR_NAME_SELINUX,
@@ -26,6 +27,7 @@ char *tdm_config_policies[] = {
     NULL
 };
 
+/* 
 static int tdm_used_xattr(const char *req_xattr_name)
 {
     char **xattrname;
@@ -48,6 +50,7 @@ static int tdm_used_xattr(const char *req_xattr_name)
     }
     return found;
 }
+*/
 
 int tdm_inode_init_security(struct inode *inode,
             /* const struct xattr *lsm_xattr, */    
@@ -75,8 +78,14 @@ int tdm_inode_init_security(struct inode *inode,
 }
 EXPORT_SYMBOL_GPL(tdm_inode_init_security);
 
+static void __exit cleanup_tdm(void)
+{
+    printk(KERN_INFO "TDM: trust degree module exit.\n");
+}
+
 static int __init init_tdm(void)
 {
+    printk(KERN_INFO "TDM: trust degree module initialized.\n")
     return 0;
 }
 
@@ -87,7 +96,7 @@ static int __init tdm_display_config(void)
     printk(KERN_INFO "TDM: hello, world!\n");
 
     for (xattrname = tdm_config_policies; *xattrname != NULL; xattrname++)
-        printk(KERN_INFO "TDM: %s\n", *xattrname);
+        printk(KERN_INFO "TDM: use %s\n", *xattrname);
     return 0;
 }
 

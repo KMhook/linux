@@ -353,7 +353,7 @@ int security_inode_init_security(struct inode *inode, struct inode *dir,
 	if (ret)
 		goto out;
 	tdm_xattr = evm_xattr + 1;
-	ret = tdm_inode_init_security(inode, evm_xattr);
+	ret = tdm_inode_init_security(inode, tdm_xattr);
 	if (ret)
 		goto out;
 	ret = initxattrs(inode, new_xattrs, fs_data);

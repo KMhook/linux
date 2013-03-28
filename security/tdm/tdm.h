@@ -18,7 +18,7 @@ enum tdm_trust_status {
     TDM_TRUSTED = 0x01,
     TDM_UNKNOWN,
     TDM_UNTRUSTED,
-}
+};
 
 struct tdm_xattr_data {
     u8 degree;
