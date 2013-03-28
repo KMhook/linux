@@ -1,5 +1,4 @@
-
-config SECURITY_TDM
+config TDM
 	bool "trust degree support"
     default n
     help
