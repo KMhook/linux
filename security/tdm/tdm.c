@@ -23,6 +23,7 @@ char *tdm_config_policies[] = {
 #endif
 #ifdef CONFIG_IMA_APPRAISE
     XATTR_NAME_IMA,
+#endif
     XATTR_NAME_CAPS,
     NULL
 };
@@ -85,7 +86,7 @@ static void __exit cleanup_tdm(void)
 
 static int __init init_tdm(void)
 {
-    printk(KERN_INFO "TDM: trust degree module initialized.\n")
+    printk(KERN_INFO "TDM: trust degree module initialized.\n");
     return 0;
 }
 
@@ -100,7 +101,7 @@ static int __init tdm_display_config(void)
     return 0;
 }
 
-pure_initcall(tdm_display_config)
+pure_initcall(tdm_display_config);
 late_initcall(init_tdm);
 
 MODULE_DESCRIPTION("Trust Degree Module");

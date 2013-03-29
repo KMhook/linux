@@ -19,10 +19,12 @@ enum tdm_trust_status {
 extern int tdm_inode_init_security(struct inode *inode, 
         struct xattr *tdm_xattr);
 
+#else
 static inline int tdm_inode_init_security(struct inode *inode, 
         struct xattr *tdm_xattr)
 {
     return 0;
 }
-#endif /* CONFIG_TDM_H */
+
+#endif
 #endif /* LINUX_TDM_H */
