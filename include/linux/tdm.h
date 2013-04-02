@@ -23,6 +23,7 @@ extern int tdm_inode_init_security(struct inode *inode,
 static inline int tdm_inode_init_security(struct inode *inode, 
         struct xattr *tdm_xattr)
 {
+    printk(KERN_INFO "TDM: using blank init function.\n");
     return 0;
 }
 

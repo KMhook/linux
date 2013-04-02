@@ -75,6 +75,21 @@ int tdm_inode_init_security(struct inode *inode,
     tdm_xattr->value = xattr_data;
     tdm_xattr->value_len = sizeof(*xattr_data);
     tdm_xattr->name = kstrdup(XATTR_TDM_SUFFIX, GFP_NOFS);
+
+    struct tdm_xattr_data *xattr_data_1;
+    xattr_data_1 = kzalloc(sizeof(*xattr_data_1), GFP_NOFS);
+    if (!xattr_data_1)
+        return -ENOMEM;
+    xattr_data_1 = tdm_xattr->value;
+
+    printk(KERN_INFO "TDM: xattr-value: degree = %d, threshold = %d, status = %d\n", 
+            xattr_data_1->degree,  
+            xattr_data_1->threshold, 
+            xattr_data_1->status);
+
+    printk(KERN_INFO "TDM: tdm_xattr: value = ^^^,value_len = %d,\
+            tdm_xattr->name = security.tdm\n", 
+            tdm_xattr->value_len);
     return 0;
 }
 EXPORT_SYMBOL_GPL(tdm_inode_init_security);

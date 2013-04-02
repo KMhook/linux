@@ -1,5 +1,5 @@
 config TDM
-	bool "trust degree support"
+	bool "Trust degree support"
     default n
     help
         If you say Y here, support for trust degrees of subjects will be
