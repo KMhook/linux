@@ -8,14 +8,11 @@
 #define _LINUX_TDM_H
 
 #include <linux/xattr.h>
+#include <linux/fs.h>
 
 #ifdef CONFIG_TDM
 struct tdm_xattr_data;
-enum tdm_trust_status {
-    TDM_TRUSTED = 0x01,
-    TDM_UNKNOWN,
-    TDM_UNTRUSTED,
-};
+
 extern int tdm_inode_init_security(struct inode *inode, 
         struct xattr *tdm_xattr);
 extern int tdm_inode_update_xattr_dummy(struct dentry *dentry);

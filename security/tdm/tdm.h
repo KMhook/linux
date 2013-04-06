@@ -8,6 +8,7 @@
  */
 
 #include <linux/types.h>
+#include <linux/tdm.h>
 
 extern int tdm_initialized;
 

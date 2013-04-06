@@ -59,11 +59,10 @@ static int tdm_used_xattr(const char *req_xattr_name)
  */
 int tdm_decrease_degree_dummy(struct tdm_xattr_data *xattr_data)
 {
-    if (NULL == xattr_data)
-        return -ENODATA;
-    int deg = xattr_data->degree;
-    int thd = xattr_data->threshold;
+    u8 deg = xattr_data->degree;
+    u8 thd = xattr_data->threshold;
     enum tdm_trust_status sts = xattr_data->status;
+
     if (0 == deg){
         if (sts != TDM_UNKNOWN)
             sts = TDM_UNKNOWN;
@@ -99,7 +98,7 @@ int tdm_inode_update_xattr_dummy(struct dentry *dentry)
     xattr_data = kzalloc(sizeof(*xattr_data), GFP_NOFS);
     if (!xattr_data)
         return -ENOMEM;
-    size = sizeof(struct xattr_data);
+    size = sizeof(struct tdm_xattr_data);
 
     rc = vfs_getxattr(dentry, XATTR_NAME_TDM, xattr_data, size);
     if (!rc)
@@ -125,6 +124,7 @@ int tdm_inode_init_security(struct inode *inode,
                 struct xattr *tdm_xattr)
 {
     struct tdm_xattr_data *xattr_data;
+    struct tdm_xattr_data *xattr_data_1;
 
     /* TODO
      * if (!tdm_initialized || !tdm_used_xattr(lsm_xattr->name))   
@@ -143,7 +143,6 @@ int tdm_inode_init_security(struct inode *inode,
     tdm_xattr->value_len = sizeof(*xattr_data);
     tdm_xattr->name = kstrdup(XATTR_TDM_SUFFIX, GFP_NOFS);
 
-    struct tdm_xattr_data *xattr_data_1;
     xattr_data_1 = kzalloc(sizeof(*xattr_data_1), GFP_NOFS);
     if (!xattr_data_1)
         return -ENOMEM;

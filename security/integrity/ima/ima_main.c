@@ -24,6 +24,7 @@
 #include <linux/slab.h>
 #include <linux/xattr.h>
 #include <linux/ima.h>
+#include <linux/tdm.h>
 
 #include "ima.h"
 
@@ -271,11 +272,18 @@ int ima_bprm_check(struct linux_binprm *bprm)
 int ima_file_check(struct file *file, int mask)
 {
 	int rc;
+    struct dentry *dentry = file->f_dentry;
 
 	ima_rdwr_violation_check(file);
 	rc = process_measurement(file, file->f_dentry->d_name.name,
 				 mask & (MAY_READ | MAY_WRITE | MAY_EXEC),
 				 FILE_CHECK);
+
+    if (0 != rc){
+        printk(KERN_INFO "TDM in IMA: result rc = %d\n", rc);
+        tdm_inode_update_xattr_dummy(dentry);
+    }
+
 	return (ima_appraise & IMA_APPRAISE_ENFORCE) ? rc : 0;
 }
 EXPORT_SYMBOL_GPL(ima_file_check);
