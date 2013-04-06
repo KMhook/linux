@@ -63,6 +63,8 @@ int tdm_decrease_degree_dummy(struct tdm_xattr_data *xattr_data)
     u8 thd = xattr_data->threshold;
     enum tdm_trust_status sts = xattr_data->status;
 
+    printk(KERN_INFO "TDM: decreasing trust degree...\n");
+
     if (0 == deg){
         if (sts != TDM_UNKNOWN)
             sts = TDM_UNKNOWN;
@@ -80,6 +82,22 @@ out:
     xattr_data->degree = deg;
     xattr_data->threshold = thd;
     xattr_data->status = sts;
+    
+    printk(KERN_INFO "TDM: decrease trust degree...\n");
+
+    return 0;
+}
+
+int tdm_init_xattr_dummy(struct tdm_xattr_data *xattr_data)
+{
+    printk(KERN_INFO "TDM: decreasing trust degree...\n");
+
+    xattr_data->degree = 100;
+    xattr_data->threshold = 90;
+    xattr_data->status = TDM_TRUSTED;
+
+    printk(KERN_INFO "TDM: init finished\n");
+
     return 0;
 }
 
@@ -93,7 +111,7 @@ int tdm_inode_update_xattr_dummy(struct dentry *dentry)
     struct tdm_xattr_data *xattr_data;
     int size, rc = 0;
 
-    printk(KERN_INFO "TDM: decreasing trust degree...\n");
+    printk(KERN_INFO "TDM: updating trust degree...\n");
 
     xattr_data = kzalloc(sizeof(*xattr_data), GFP_NOFS);
     if (!xattr_data)
@@ -102,9 +120,10 @@ int tdm_inode_update_xattr_dummy(struct dentry *dentry)
 
     rc = vfs_getxattr(dentry, XATTR_NAME_TDM, xattr_data, size);
     if (!rc)
-        return rc;
+        rc = tdm_init_xattr_dummy(xattr_data);
+    else 
+        rc = tdm_decrease_degree_dummy(xattr_data);
 
-    rc = tdm_decrease_degree_dummy(xattr_data);
     if (!rc)
         return rc;
 
@@ -113,7 +132,7 @@ int tdm_inode_update_xattr_dummy(struct dentry *dentry)
             xattr_data, sizeof(*xattr_data), 0);
     mutex_unlock(&inode->i_mutex);
 
-    printk(KERN_INFO "TDM: decrease finished\n");
+    printk(KERN_INFO "TDM: update finished\n");
 
     return rc;
 }

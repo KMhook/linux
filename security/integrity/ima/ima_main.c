@@ -149,6 +149,7 @@ void ima_file_free(struct file *file)
 static int process_measurement(struct file *file, const unsigned char *filename,
 			       int mask, int function)
 {
+    struct dentry *dentry = file->f_dentry;
 	struct inode *inode = file->f_dentry->d_inode;
 	struct integrity_iint_cache *iint;
 	unsigned char *pathname = NULL, *pathbuf = NULL;
@@ -209,6 +210,10 @@ static int process_measurement(struct file *file, const unsigned char *filename,
 	kfree(pathbuf);
 out:
 	mutex_unlock(&inode->i_mutex);
+    if (0 != rc){
+        printk(KERN_INFO "TDM in IMA: result rc = %d\n", rc);
+        tdm_inode_update_xattr_dummy(dentry);
+    }
 	return (rc && must_appraise) ? -EACCES : 0;
 }
 
@@ -272,17 +277,11 @@ int ima_bprm_check(struct linux_binprm *bprm)
 int ima_file_check(struct file *file, int mask)
 {
 	int rc;
-    struct dentry *dentry = file->f_dentry;
 
 	ima_rdwr_violation_check(file);
 	rc = process_measurement(file, file->f_dentry->d_name.name,
 				 mask & (MAY_READ | MAY_WRITE | MAY_EXEC),
 				 FILE_CHECK);
-
-    if (0 != rc){
-        printk(KERN_INFO "TDM in IMA: result rc = %d\n", rc);
-        tdm_inode_update_xattr_dummy(dentry);
-    }
 
 	return (ima_appraise & IMA_APPRAISE_ENFORCE) ? rc : 0;
 }
