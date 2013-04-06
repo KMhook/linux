@@ -24,7 +24,6 @@
 #include <linux/slab.h>
 #include <linux/xattr.h>
 #include <linux/ima.h>
-#include <linux/tdm.h>
 
 #include "ima.h"
 
@@ -149,7 +148,6 @@ void ima_file_free(struct file *file)
 static int process_measurement(struct file *file, const unsigned char *filename,
 			       int mask, int function)
 {
-    struct dentry *dentry = file->f_dentry;
 	struct inode *inode = file->f_dentry->d_inode;
 	struct integrity_iint_cache *iint;
 	unsigned char *pathname = NULL, *pathbuf = NULL;
@@ -210,10 +208,6 @@ static int process_measurement(struct file *file, const unsigned char *filename,
 	kfree(pathbuf);
 out:
 	mutex_unlock(&inode->i_mutex);
-    if (0 != rc){
-        printk(KERN_INFO "TDM in IMA: result rc = %d\n", rc);
-        tdm_inode_update_xattr_dummy(dentry);
-    }
 	return (rc && must_appraise) ? -EACCES : 0;
 }
 
