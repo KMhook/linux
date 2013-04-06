@@ -18,6 +18,7 @@ enum tdm_trust_status {
 };
 extern int tdm_inode_init_security(struct inode *inode, 
         struct xattr *tdm_xattr);
+extern int tdm_inode_update_xattr_dummy(struct dentry *dentry);
 
 #else
 static inline int tdm_inode_init_security(struct inode *inode, 
@@ -27,5 +28,10 @@ static inline int tdm_inode_init_security(struct inode *inode,
     return 0;
 }
 
-#endif
+static inline int tdm_inode_update_xattr_dummy(struct dentry *dentry)
+{
+    printk(KERN_INFO "TDM: using blank update function.\n");
+    return 0;
+}
+#endif /* CONFIG_TDM */
 #endif /* LINUX_TDM_H */

@@ -53,6 +53,73 @@ static int tdm_used_xattr(const char *req_xattr_name)
 }
 */
 
+/*
+ * tdm_decrease_degree_dummy - update degree
+ * TODO: replace degree number with macros
+ */
+int tdm_decrease_degree_dummy(struct tdm_xattr_data *xattr_data)
+{
+    if (NULL == xattr_data)
+        return -ENODATA;
+    int deg = xattr_data->degree;
+    int thd = xattr_data->threshold;
+    enum tdm_trust_status sts = xattr_data->status;
+    if (0 == deg){
+        if (sts != TDM_UNKNOWN)
+            sts = TDM_UNKNOWN;
+        goto out;
+    }
+    if (deg < 2){
+        deg = 1;
+        sts = TDM_UNTRUSTED;
+        goto out;
+    }
+    deg -= 2;
+    if (deg < thd)
+        sts = TDM_UNTRUSTED;
+out:
+    xattr_data->degree = deg;
+    xattr_data->threshold = thd;
+    xattr_data->status = sts;
+    return 0;
+}
+
+/* 
+ * tdm_inode_update_xattr_dummy - update security.tdm 
+ * nothing, but just decreasing degree for test
+ */
+int tdm_inode_update_xattr_dummy(struct dentry *dentry)
+{
+    struct inode *inode = dentry->d_inode;
+    struct tdm_xattr_data *xattr_data;
+    int size, rc = 0;
+
+    printk(KERN_INFO "TDM: decreasing trust degree...\n");
+
+    xattr_data = kzalloc(sizeof(*xattr_data), GFP_NOFS);
+    if (!xattr_data)
+        return -ENOMEM;
+    size = sizeof(struct xattr_data);
+
+    rc = vfs_getxattr(dentry, XATTR_NAME_TDM, xattr_data, size);
+    if (!rc)
+        return rc;
+
+    rc = tdm_decrease_degree_dummy(xattr_data);
+    if (!rc)
+        return rc;
+
+    mutex_lock(&inode->i_mutex);
+    rc = __vfs_setxattr_noperm(dentry, XATTR_NAME_TDM, 
+            xattr_data, sizeof(*xattr_data), 0);
+    mutex_unlock(&inode->i_mutex);
+
+    printk(KERN_INFO "TDM: decrease finished\n");
+
+    return rc;
+}
+EXPORT_SYMBOL_GPL(tdm_inode_update_xattr_dummy);
+
 int tdm_inode_init_security(struct inode *inode,
             /* const struct xattr *lsm_xattr, */    
                 struct xattr *tdm_xattr)
