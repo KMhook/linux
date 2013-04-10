@@ -268,6 +268,8 @@ int ima_file_check(struct file *file, int mask)
 	return process_measurement(file, file->f_dentry->d_name.name,
 				 mask & (MAY_READ | MAY_WRITE | MAY_EXEC),
 				 FILE_CHECK);
+
+	return (ima_appraise & IMA_APPRAISE_ENFORCE) ? rc : 0;
 }
 EXPORT_SYMBOL_GPL(ima_file_check);
 

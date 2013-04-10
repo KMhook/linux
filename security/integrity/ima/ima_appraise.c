@@ -15,6 +15,7 @@
 #include <linux/magic.h>
 #include <linux/ima.h>
 #include <linux/evm.h>
+#include <linux/tdm.h>
 
 #include "ima.h"
 
@@ -191,6 +192,10 @@ int ima_appraise_measurement(int func, struct integrity_iint_cache *iint,
 
 out:
 	if (status != INTEGRITY_PASS) {
+
+        printk(KERN_INFO "TDM in IMA: get bad result rc = %d \n", rc);
+        tdm_inode_update_xattr_dummy(dentry);
+
 		if ((ima_appraise & IMA_APPRAISE_FIX) &&
 		    (!xattr_value ||
 		     xattr_value->type != EVM_IMA_XATTR_DIGSIG)) {
