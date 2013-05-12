@@ -53,6 +53,19 @@ static int tdm_used_xattr(const char *req_xattr_name)
 }
 */
 
+static int dump_xattr_data_dummy(struct tdm_xattr_data *xattr_data)
+{
+    u8 deg = xattr_data->degree;
+    u8 thd = xattr_data->threshold;
+    enum tdm_trust_status sts = xattr_data->status;
+
+    printk(KERN_INFO "TDM: security.tdm infomation...\n");
+    printk(KERN_INFO "tdm->deg: %d, tdm->thd: %d, tdm->sts: %d\n",
+            deg, thd, sts);
+
+    return 0;
+}
+
 /*
  * tdm_decrease_degree_dummy - update degree
  * TODO: replace degree number with macros
@@ -119,7 +132,9 @@ int tdm_inode_update_xattr_dummy(struct dentry *dentry)
     size = sizeof(struct tdm_xattr_data);
 
     rc = vfs_getxattr(dentry, XATTR_NAME_TDM, xattr_data, size);
-    if (rc)
+    printk(KERN_INFO "TDM: get xattr return code: %d.\n", rc);
+    dump_xattr_data_dummy(xattr_data);
+    if (rc < 0)
         rc = tdm_init_xattr_dummy(xattr_data);
     else 
         rc = tdm_decrease_degree_dummy(xattr_data);
