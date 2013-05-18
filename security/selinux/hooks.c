@@ -82,6 +82,7 @@
 #include <linux/export.h>
 #include <linux/msg.h>
 #include <linux/shm.h>
+#include <linux/tdm.h>
 
 #include "avc.h"
 #include "objsec.h"
@@ -2624,6 +2625,9 @@ static noinline int audit_inode_permission(struct inode *inode,
 static int selinux_inode_permission(struct inode *inode, int mask)
 {
 	const struct cred *cred = current_cred();
+    /*  
+    const struct task_struct *ctask = get_current();
+    */
 	u32 perms;
 	bool from_access;
 	unsigned flags = mask & MAY_NOT_BLOCK;
@@ -2654,10 +2658,12 @@ static int selinux_inode_permission(struct inode *inode, int mask)
 	audited = avc_audit_required(perms, &avd, rc,
 				     from_access ? FILE__AUDIT_ACCESS : 0,
 				     &denied);
+
 	if (likely(!audited))
 		return rc;
 
 	rc2 = audit_inode_permission(inode, perms, audited, denied, flags);
+    printk(KERN_INFO "selinux inode permission: rc = %d, rc2= %d\n", rc, rc2);
 	if (rc2)
 		return rc2;
 	return rc;

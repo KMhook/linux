@@ -128,7 +128,6 @@ static int cap_inode_init_security(struct inode *inode, struct inode *dir,
 static int cap_inode_create(struct inode *inode, struct dentry *dentry,
 			    umode_t mask)
 {
-    printk(KERN_INFO "CAP: using cap_inode_create\n");
 	return 0;
 }
 

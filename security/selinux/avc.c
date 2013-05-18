@@ -685,15 +685,19 @@ static noinline int avc_denied(u32 ssid, u32 tsid,
 			 unsigned flags,
 			 struct av_decision *avd)
 {
+    int rc = 0;
 	if (flags & AVC_STRICT)
 		return -EACCES;
+
+    if(!avd->flags & AVD_FLAGS_PERMISSIVE)
+        printk(KERN_INFO "avc_denied: avd->flags=%u\n", avd->flags);
 
 	if (selinux_enforcing && !(avd->flags & AVD_FLAGS_PERMISSIVE))
 		return -EACCES;
 
 	avc_update_node(AVC_CALLBACK_GRANT, requested, ssid,
 				tsid, tclass, avd->seqno);
-	return 0;
+	return rc;
 }
 
 

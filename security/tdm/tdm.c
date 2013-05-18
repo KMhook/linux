@@ -53,6 +53,17 @@ static int tdm_used_xattr(const char *req_xattr_name)
 }
 */
 
+/*
+ * get_full_file_name - dump full path
+static void get_full_file_name(char *result, struct file *file)
+{
+    char buf[IMA_EVENT_NAME_LEN_MAX], *result_temp = NULL;
+
+    result_temp = d_path(&file->f_path, buf, IMA_EVENT_NAME_LEN_MAX);
+    strncpy(result, result_temp, IMA_EVENT_NAME_LEN_MAX);
+}
+ */
+
 static int dump_xattr_data_dummy(struct tdm_xattr_data *xattr_data)
 {
     u8 deg = xattr_data->degree;
@@ -114,6 +125,11 @@ int tdm_init_xattr_dummy(struct tdm_xattr_data *xattr_data)
     return 0;
 }
 
+/*
+ * TODO: tdm_trust_degree_check_dummy - check security.tdm
+ * nothing, but just check whether the degree > threshold
+ */
+
 /* 
  * tdm_inode_update_xattr_dummy - update security.tdm 
  * nothing, but just decreasing degree for test
@@ -163,6 +179,11 @@ int tdm_inode_init_security(struct inode *inode,
 {
     struct tdm_xattr_data *xattr_data;
     struct tdm_xattr_data *xattr_data_1;
+    /*  
+    struct dentry *d = list_entry(inode->i_dentry.next, struct dentry, d_alias);
+    char *filename = d_path(d, mntget(current->fs->rootmnt), filebuf, PATH_MAX);
+    mntput(current->fs->rootmnt);
+    */
 
     /* TODO
      * if (!tdm_initialized || !tdm_used_xattr(lsm_xattr->name))   
@@ -186,14 +207,12 @@ int tdm_inode_init_security(struct inode *inode,
         return -ENOMEM;
     xattr_data_1 = tdm_xattr->value;
 
-    printk(KERN_INFO "TDM: xattr-value: degree = %d, threshold = %d, status = %d\n", 
+    printk(KERN_INFO "TDM: inode number = %lu, degree = %d, threshold = %d, status = %d\n", 
+            inode->i_ino,
             xattr_data_1->degree,  
             xattr_data_1->threshold, 
             xattr_data_1->status);
 
-    printk(KERN_INFO "TDM: tdm_xattr: value = ^^^,value_len = %d,\
-            tdm_xattr->name = security.tdm\n", 
-            tdm_xattr->value_len);
     return 0;
 }
 EXPORT_SYMBOL_GPL(tdm_inode_init_security);
